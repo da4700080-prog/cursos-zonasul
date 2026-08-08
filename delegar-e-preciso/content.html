@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delegar é Preciso — Zona Sul</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#ed1c24;--red-dark:#b01018;--red-light:#f5494f;
+  --charcoal:#333132;--gray:#939598;--gray-light:#f4f4f4;
+  --bg:#ffffff;--bg2:#f8f8f8;--bg3:#f0f0f0;
+  --text:#333132;--text-muted:#666;
+  --white:#ffffff;--green:#16a34a;--danger:#dc2626;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+.screen{display:none}
+.screen.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* LOGO BAR */
+.logo-bar{background:var(--charcoal);padding:.7rem 1.5rem;display:flex;align-items:center;gap:.75rem;border-bottom:3px solid var(--red)}
+.logo-text{font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:900;color:#fff;letter-spacing:-.5px}
+.logo-heart{color:var(--red);font-size:1.4rem;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.logo-sub{font-size:.68rem;color:#aaa;font-weight:600;letter-spacing:1px;text-transform:uppercase;border-left:1px solid #555;padding-left:.75rem;margin-left:.25rem}
+
+/* HERO — DARK (mantém como estava) */
+.hero{min-height:100vh;background:var(--charcoal);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(237,28,36,.2) 0%,transparent 70%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.hero-badge{background:rgba(237,28,36,.15);border:1.5px solid rgba(237,28,36,.4);color:#f5494f;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:8px 22px;border-radius:4px;margin-bottom:2rem;position:relative;z-index:2;animation:slideDown .6s ease .2s both}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.hero h1{font-family:'Nunito',sans-serif;font-size:clamp(2.8rem,7vw,5rem);font-weight:900;color:#fff;line-height:1.0;margin-bottom:1.5rem;position:relative;z-index:2;animation:slideUp .6s ease .4s both;letter-spacing:-2px}
+.hero h1 span{color:var(--red)}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);max-width:520px;line-height:1.85;margin-bottom:2.5rem;position:relative;z-index:2;animation:slideUp .6s ease .55s both}
+.hero-stats{display:flex;gap:3rem;margin-bottom:3rem;position:relative;z-index:2;animation:slideUp .6s ease .65s both}
+.stat-num{font-family:'Nunito',sans-serif;font-size:2.4rem;font-weight:900;color:var(--red)}
+.stat-label{font-size:.68rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-top:2px;font-weight:600}
+.btn-hero{background:var(--red);color:#fff;border:none;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:800;padding:1.1rem 3.5rem;border-radius:4px;cursor:pointer;position:relative;z-index:2;transition:all .3s;animation:slideUp .6s ease .75s both;box-shadow:0 8px 32px rgba(237,28,36,.35);letter-spacing:.5px;text-transform:uppercase}
+.btn-hero:hover{background:var(--red-light);transform:translateY(-3px)}
+
+/* PROGRESS */
+.prog-bar{background:#fff;border-bottom:1px solid #e8e8e8;padding:.85rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.prog-label{font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:700;color:var(--gray);white-space:nowrap;min-width:110px;text-transform:uppercase;letter-spacing:.5px}
+.prog-track{flex:1;height:5px;background:#eee;border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;background:var(--red);border-radius:100px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.prog-pct{font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:800;color:var(--red);min-width:32px;text-align:right}
+
+/* MODULE HEADER — LIGHT */
+.mod-header{padding:2.5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden;background:#fff;border-bottom:1px solid #eee}
+.mod-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--red),var(--red-dark))}
+.mod-chip{display:inline-block;background:rgba(237,28,36,.08);border:1.5px solid rgba(237,28,36,.25);color:var(--red);font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:5px 16px;border-radius:4px;margin-bottom:.9rem}
+.mod-header h2{font-family:'Nunito',sans-serif;font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:900;line-height:1.2;max-width:600px;margin:0 auto .65rem;color:var(--charcoal);letter-spacing:-1px}
+.mod-header p{font-size:.9rem;color:var(--text-muted);max-width:500px;margin:0 auto;line-height:1.75}
+
+/* BODY */
+.body{max-width:760px;margin:0 auto;padding:2rem 1.5rem 4rem;background:#fff}
+
+/* IMAGES */
+.course-img-wrap{position:relative;margin:1.5rem 0;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.course-img-wrap img{width:100%;height:250px;object-fit:cover;display:block}
+.img-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.65));padding:1rem 1.25rem .7rem;color:rgba(255,255,255,.85);font-size:.77rem;font-style:italic}
+
+/* SECTION TITLE */
+.s-title{font-family:'Nunito',sans-serif;font-size:1.2rem;font-weight:800;color:var(--charcoal);margin:2rem 0 .4rem;letter-spacing:-.3px}
+.s-sub{font-size:.9rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem}
+
+/* HIGHLIGHT */
+.highlight{background:#fff5f5;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:1.1rem 1.4rem;margin:1.5rem 0}
+.highlight p{font-size:.9rem;line-height:1.8;color:var(--charcoal)}
+.highlight strong{color:var(--red-dark)}
+
+/* QUOTE */
+.quote-block{background:var(--charcoal);border-radius:10px;padding:1.75rem 2rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.quote-block::before{content:'"';font-family:'Nunito',sans-serif;font-size:6rem;color:rgba(237,28,36,.15);position:absolute;top:-20px;left:14px;line-height:1;font-weight:900}
+.quote-text{font-size:.98rem;line-height:1.8;font-style:italic;color:rgba(255,255,255,.88);position:relative;z-index:1}
+.quote-author{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;color:var(--red-light);margin-top:.7rem;position:relative;z-index:1;letter-spacing:.5px;text-transform:uppercase}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0}
+.card{background:var(--bg2);border:1px solid #e5e5e5;border-top:3px solid var(--red);border-radius:8px;padding:1.4rem;transition:all .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(237,28,36,.1);border-color:#ddd}
+.card h3{font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;color:var(--red);margin-bottom:.45rem;text-transform:uppercase;letter-spacing:.3px}
+.card p{font-size:.83rem;color:var(--text-muted);line-height:1.7}
+
+/* ACCORDION */
+.acc{margin:1.5rem 0}
+.acc-item{background:#fff;border:1px solid #e8e8e8;border-radius:8px;margin-bottom:.55rem;overflow:hidden;transition:border-color .2s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.acc-item:hover{border-color:#f5c0c2}
+.acc-btn{width:100%;background:none;border:none;padding:1rem 1.25rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;text-align:left;transition:background .2s}
+.acc-btn:hover{background:#fff5f5}
+.acc-btn.open{background:#fff5f5}
+.acc-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;transition:all .3s}
+.acc-btn.open .acc-dot{transform:scale(1.8)}
+.acc-ttl{font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;color:var(--charcoal);flex:1;line-height:1.4}
+.acc-arr{color:var(--gray);transition:transform .3s;font-size:.85rem}
+.acc-btn.open .acc-arr{transform:rotate(180deg)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.acc-body.open{max-height:400px}
+.acc-content{padding:.25rem 1.25rem 1.2rem 2.9rem;font-size:.87rem;color:var(--text-muted);line-height:1.8;border-top:1px solid #f0f0f0;padding-top:.9rem}
+
+/* STEPS */
+.steps{margin:1.5rem 0}
+.step{display:flex;gap:1rem;margin-bottom:1.4rem;align-items:flex-start}
+.step-n{width:38px;height:38px;border-radius:6px;background:var(--red);color:#fff;font-family:'Nunito',sans-serif;font-weight:900;font-size:.95rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 12px rgba(237,28,36,.25)}
+.step-body h4{font-family:'Nunito',sans-serif;font-size:.92rem;font-weight:800;margin-bottom:.3rem;color:var(--charcoal)}
+.step-body p{font-size:.83rem;color:var(--text-muted);line-height:1.75}
+
+/* MATRIX */
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1.5rem 0}
+.matrix-cell{border-radius:8px;padding:1.1rem;text-align:center}
+.matrix-cell h4{font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:800;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.5px}
+.matrix-cell p{font-size:.76rem;line-height:1.55;color:var(--text-muted)}
+.mc-red{background:#fff0f0;border:1.5px solid #ffc0c2}
+.mc-red h4{color:var(--red)}
+.mc-navy{background:#f5f5f5;border:1.5px solid #ddd}
+.mc-navy h4{color:var(--charcoal)}
+.mc-green{background:#f0fdf4;border:1.5px solid #86efac}
+.mc-green h4{color:#16a34a}
+.mc-gray{background:#fafafa;border:1.5px solid #e0e0e0}
+.mc-gray h4{color:#777}
+
+/* TABS */
+.tab-nav{display:flex;gap:.4rem;margin:1.5rem 0 0;flex-wrap:wrap}
+.tab-btn{background:#f5f5f5;border:1px solid #e0e0e0;color:var(--text-muted);font-family:'Nunito',sans-serif;font-size:.76rem;font-weight:700;padding:.45rem .95rem;border-radius:4px;cursor:pointer;transition:all .22s;text-transform:uppercase;letter-spacing:.4px}
+.tab-btn:hover{background:#fff0f0;border-color:#fbb;color:var(--red)}
+.tab-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
+.tab-panel{display:none;background:var(--bg2);border:1px solid #e8e8e8;border-radius:0 6px 6px 6px;padding:1.4rem;font-size:.87rem;color:var(--text-muted);line-height:1.8}
+.tab-panel.active{display:block;animation:fadeIn .3s ease}
+.tab-panel strong{color:var(--charcoal)}
+
+/* QUIZ */
+.quiz{background:var(--bg2);border:1px solid #e8e8e8;border-radius:10px;padding:1.75rem;margin:1.5rem 0;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.quiz-n{font-family:'Nunito',sans-serif;font-size:.67rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);margin-bottom:.5rem}
+.quiz-q{font-family:'Nunito',sans-serif;font-size:.96rem;font-weight:700;line-height:1.55;margin-bottom:1.2rem;color:var(--charcoal)}
+.opts{display:flex;flex-direction:column;gap:.55rem}
+.opt{background:#fff;border:1.5px solid #e5e5e5;border-radius:8px;padding:.85rem 1rem;cursor:pointer;font-size:.85rem;transition:all .22s;display:flex;align-items:center;gap:.7rem;text-align:left;color:var(--text)}
+.opt:hover{border-color:var(--red);background:#fff8f8}
+.opt.ok{border-color:#16a34a;background:#f0fdf4;color:#15803d}
+.opt.nok{border-color:var(--danger);background:#fef2f2;color:#991b1b}
+.opt-l{width:28px;height:28px;border-radius:4px;background:#fff0f0;color:var(--red);font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.ok .opt-l{background:#dcfce7;color:#16a34a}
+.opt.nok .opt-l{background:#fee2e2;color:var(--danger)}
+.fb{margin-top:.9rem;padding:.85rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.7;display:none}
+.fb.show{display:block}
+.fb.ok{background:#f0fdf4;color:#15803d;border:1px solid #86efac}
+.fb.nok{background:#fef2f2;color:#991b1b;border:1px solid #fca5a5}
+
+/* SCENARIO */
+.scenario{background:var(--bg2);border:1px solid #e5e5e5;border-top:3px solid var(--red);border-radius:8px;padding:1.75rem;margin:1.5rem 0}
+.sc-chip{font-size:.66rem;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);margin-bottom:.55rem}
+.scenario h3{font-family:'Nunito',sans-serif;font-size:.98rem;font-weight:800;margin-bottom:.7rem;color:var(--charcoal)}
+.scenario p{font-size:.85rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem}
+.sc-opts{display:flex;flex-direction:column;gap:.55rem}
+.sc-opt{background:#fff;border:1.5px solid #e5e5e5;border-radius:8px;padding:.85rem 1rem;cursor:pointer;font-size:.85rem;color:var(--text);transition:all .22s;text-align:left}
+.sc-opt:hover{border-color:var(--red);background:#fff8f8}
+.sc-opt.good{border-color:#16a34a;background:#f0fdf4;color:#15803d}
+.sc-opt.bad{border-color:var(--danger);background:#fef2f2;color:#991b1b}
+.sc-res{margin-top:.9rem;padding:.85rem;border-radius:8px;font-size:.85rem;display:none}
+.sc-res.show{display:block}
+.sc-res.good{background:#f0fdf4;border:1px solid #86efac;color:#15803d}
+.sc-res.bad{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+
+/* FLASHCARDS */
+.flash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1.5rem 0}
+.flash{height:160px;perspective:1000px;cursor:pointer}
+.flash-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flash.flipped .flash-inner{transform:rotateY(180deg)}
+.flash-front,.flash-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem;text-align:center}
+.flash-front{background:var(--red);box-shadow:0 4px 16px rgba(237,28,36,.25)}
+.flash-front .flash-tag{font-size:.62rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:.45rem}
+.flash-front h4{font-family:'Nunito',sans-serif;font-size:.92rem;font-weight:800;color:#fff;line-height:1.3}
+.flash-front .flip-hint{font-size:.67rem;color:rgba(255,255,255,.45);margin-top:.7rem}
+.flash-back{background:#fff;border:2px solid #eee;transform:rotateY(180deg);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.flash-back p{font-size:.82rem;color:var(--text-muted);line-height:1.7}
+
+/* DOTS */
+.dots{display:flex;gap:6px;justify-content:center;margin:1.2rem 0 .5rem}
+.dot{width:7px;height:7px;border-radius:50%;background:#ddd;transition:all .3s}
+.dot.active{width:22px;border-radius:100px;background:var(--red)}
+.dot.done{background:#f5aaac}
+
+/* BTN */
+.btn-next{background:var(--red);color:#fff;border:none;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;padding:.9rem 2.5rem;border-radius:6px;cursor:pointer;margin-top:1.75rem;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem;box-shadow:0 4px 16px rgba(237,28,36,.25);letter-spacing:.5px;text-transform:uppercase}
+.btn-next:hover{background:var(--red-light);transform:translateY(-2px);box-shadow:0 8px 28px rgba(237,28,36,.3)}
+.btn-next:disabled{background:#ccc;color:#999;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* METER */
+.meter-wrap{background:var(--bg2);border:1px solid #e8e8e8;border-radius:10px;padding:1.4rem;margin:1.5rem 0}
+.meter-top{font-family:'Nunito',sans-serif;font-size:.83rem;font-weight:700;display:flex;justify-content:space-between;margin-bottom:.55rem;color:var(--charcoal)}
+.meter-track{height:6px;background:#eee;border-radius:100px;overflow:hidden;margin-bottom:.7rem}
+.meter-bar{height:100%;border-radius:100px;transition:width 1.2s cubic-bezier(.4,0,.2,1);background:var(--red)}
+.meter-msg{font-size:.82rem;color:var(--text-muted)}
+
+/* FINAL — DARK (mantém) */
+.final{min-height:90vh;background:var(--charcoal);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 2rem;color:#fff;position:relative;overflow:hidden}
+.final::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(237,28,36,.18) 0%,transparent 65%)}
+.trophy{font-size:5rem;margin-bottom:1.5rem;animation:bounce 1.2s ease infinite alternate;display:block}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+.final h2{font-family:'Nunito',sans-serif;font-size:2.2rem;font-weight:900;margin-bottom:.75rem;letter-spacing:-1px;position:relative;z-index:1}
+.final>p{font-size:.95rem;color:rgba(255,255,255,.55);max-width:460px;line-height:1.8;margin-bottom:2rem;position:relative;z-index:1}
+.score-badge{background:rgba(237,28,36,.12);border:2px solid rgba(237,28,36,.4);border-radius:8px;padding:1.2rem 2.5rem;margin-bottom:2rem;position:relative;z-index:1}
+.score-big{font-family:'Nunito',sans-serif;font-size:3rem;font-weight:900;color:var(--red-light)}
+.score-lbl{font-size:.7rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.btn-restart{background:transparent;border:1.5px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);font-family:'Nunito',sans-serif;font-weight:700;padding:.9rem 2.5rem;border-radius:4px;cursor:pointer;transition:all .3s;font-size:.87rem;text-transform:uppercase;letter-spacing:.5px;position:relative;z-index:1}
+.btn-restart:hover{border-color:#fff;color:#fff}
+
+@media(max-width:600px){
+  .hero h1{font-size:2.5rem}
+  .hero-stats{gap:1.5rem}
+  .stat-num{font-size:2rem}
+  .matrix{grid-template-columns:1fr}
+  .cards-grid{grid-template-columns:1fr}
+  .flash-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<script>
+const SCORM={api:null,initialized:false,find(){let w=window;for(let i=0;i<10;i++){if(w.API)return w.API;if(!w.parent||w.parent===w)break;w=w.parent;}return null;},init(){this.api=this.find();if(this.api)try{this.api.LMSInitialize('');this.initialized=true;this.api.LMSSetValue('cmi.core.lesson_status','incomplete');this.api.LMSSetValue('cmi.core.score.min','0');this.api.LMSSetValue('cmi.core.score.max','100');}catch(e){}},set(k,v){if(this.api&&this.initialized)try{this.api.LMSSetValue(k,v);}catch(e){}},finish(){if(this.api&&this.initialized)try{this.api.LMSFinish('');}catch(e){}}}
+SCORM.init();
+</script>
+
+<!-- HERO -->
+<div id="s-hero" class="screen active">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-badge">Curso de Liderança</div>
+    <h1>Delegar é <span>Preciso</span></h1>
+    <p class="hero-sub">Aprenda a distribuir responsabilidades com estratégia, desenvolver sua equipe e liberar seu potencial como líder.</p>
+    <div class="hero-stats">
+      <div><div class="stat-num">3</div><div class="stat-label">Módulos</div></div>
+      <div><div class="stat-num">~30</div><div class="stat-label">Minutos</div></div>
+      <div><div class="stat-num">8</div><div class="stat-label">Atividades</div></div>
+    </div>
+    <button class="btn-hero" onclick="goTo('s-m1-a')">Começar agora →</button>
+  </div>
+</div>
+
+<!-- M1-A -->
+<div id="s-m1-a" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 1 de 3</span><div class="prog-track"><div class="prog-fill" style="width:8%"></div></div><span class="prog-pct">8%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 01</div><h2>O que é delegar — e por que é difícil?</h2><p>Entenda o conceito, os tipos de delegação e os benefícios reais para você, sua equipe e organização.</p></div>
+  <div class="body">
+    <div class="dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="course-img-wrap"><img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80" alt="Líder distribuindo responsabilidades"><div class="img-label">Líder distribuindo responsabilidades com a equipe</div></div>
+    <h2 class="s-title">O que é delegação?</h2>
+    <p class="s-sub">Delegar não é simplesmente passar uma tarefa para alguém. É transferir autoridade, responsabilidade e os recursos necessários para que outra pessoa execute com autonomia — mantendo você como responsável final pelo resultado.</p>
+    <div class="highlight"><p>"Delegar é o ato de <strong>confiar</strong>. Não apenas uma tarefa — mas a capacidade de outra pessoa de realizá-la bem."</p></div>
+    <h2 class="s-title">Os dois tipos de delegação</h2>
+    <div class="cards-grid">
+      <div class="card"><h3>Tipo 1 — Parcial</h3><p>Você passa a atividade, mas mantém a responsabilidade e a autoridade. O colaborador executa, mas você decide.</p></div>
+      <div class="card"><h3>Tipo 2 — Total (Empowerment)</h3><p>Você transfere responsabilidade e autoridade. A equipe compartilha o sucesso e o fracasso. Cria autonomia real.</p></div>
+    </div>
+    <div class="quote-block"><p class="quote-text">"Não seja um gargalo. Se algum assunto não exigir uma decisão sua, delegue-a. Force a responsabilidade para baixo e para fora."</p><p class="quote-author">— Donald Rumsfeld, ex-Secretário de Estado dos EUA</p></div>
+    <button class="btn-next" onclick="goTo('s-m1-b')">Próximo →</button>
+  </div>
+</div>
+
+<!-- M1-B -->
+<div id="s-m1-b" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 1 de 3</span><div class="prog-track"><div class="prog-fill" style="width:18%"></div></div><span class="prog-pct">18%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 01</div><h2>Os benefícios da delegação eficaz</h2><p>Para você, para sua equipe e para a organização inteira.</p></div>
+  <div class="body">
+    <div class="dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="course-img-wrap"><img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80" alt="Gestora em reunião estratégica"><div class="img-label">Foco estratégico: gestora livre para o que realmente importa</div></div>
+    <div class="cards-grid">
+      <div class="card"><h3>Para você</h3><p>Libera tempo para focar em prioridades estratégicas. Reduz sobrecarga e estresse. Aperfeiçoa a comunicação com a equipe.</p></div>
+      <div class="card"><h3>Para sua equipe</h3><p>Desenvolve habilidades novas. Aumenta motivação e senso de realização. Prepara sucessores e cria líderes internos.</p></div>
+      <div class="card"><h3>Para a organização</h3><p>Aumenta produtividade geral. Distribui tarefas para as pessoas certas. Libera criatividade e inovação.</p></div>
+    </div>
+    <div class="highlight"><p>Segundo especialistas em Gestão de Pessoas: <strong>"A medida de sucesso do líder deixa de ser a eficiência em executar tarefas e passa a ser a capacidade de desenvolver e apoiar a equipe."</strong></p></div>
+    <button class="btn-next" onclick="goTo('s-m1-c')">Próximo →</button>
+  </div>
+</div>
+
+<!-- M1-C -->
+<div id="s-m1-c" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 1 de 3</span><div class="prog-track"><div class="prog-fill" style="width:28%"></div></div><span class="prog-pct">28%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 01</div><h2>Por que é tão difícil delegar?</h2><p>Conheça as barreiras mais comuns e o que está por trás delas.</p></div>
+  <div class="body">
+    <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+    <p class="s-sub">Clique em cada barreira para entender o que está realmente acontecendo:</p>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">"Eu faço mais rápido sozinho"</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Verdade no curto prazo — mas no longo prazo você vira um gargalo. O tempo investido em treinar vale muito mais do que o tempo "poupado" fazendo sozinho.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">"Tenho medo de perder o controle"</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Delegar não é abandonar. É redefinir o ponto de controle. Com checkpoints claros e comunicação aberta, o controle sobre a qualidade se mantém — sem microgerenciamento.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">"A equipe não está pronta"</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Pode ser verdade para tarefas específicas — mas muitas vezes é um pretexto. Comece com tarefas menores e aumente a complexidade conforme a confiança for sendo construída.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">"Minha posição pode ser ameaçada"</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">O oposto é verdadeiro. Gestores que desenvolvem equipes fortes são vistos como líderes estratégicos. Um time capaz não substitui você — libera você para assumir responsabilidades maiores.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">"Delegar dá mais trabalho do que fazer"</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Sim, no início. Mas cada delegação bem-feita é um ativo que se multiplica: na próxima vez, aquela pessoa já sabe fazer. O retorno é exponencial.</div></div></div>
+    </div>
+    <button class="btn-next" onclick="goTo('s-m1-quiz')">Próximo →</button>
+  </div>
+</div>
+
+<!-- M1-QUIZ -->
+<div id="s-m1-quiz" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 1 de 3</span><div class="prog-track"><div class="prog-fill" style="width:36%"></div></div><span class="prog-pct">36%</span></div>
+  <div class="mod-header"><div class="mod-chip">Verificação — Módulo 01</div><h2>Teste seus conhecimentos</h2><p>Responda antes de avançar.</p></div>
+  <div class="body">
+    <div class="dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+    <div class="quiz">
+      <div class="quiz-n">Pergunta 1 de 2</div>
+      <p class="quiz-q">Qual é a principal diferença entre delegação parcial e delegação total (empowerment)?</p>
+      <div class="opts" id="q1">
+        <div class="opt" onclick="answer('q1',this,false,'Na parcial, o gestor mantém autoridade. Na total, transfere responsabilidade e autoridade à equipe.')"><div class="opt-l">A</div>Na parcial o gestor trabalha menos; na total trabalha mais</div>
+        <div class="opt" onclick="answer('q1',this,true,'Exato! Na delegação parcial o gestor mantém a autoridade; na total, transfere responsabilidade e autoridade, criando empowerment real.')"><div class="opt-l">B</div>Na parcial o gestor mantém autoridade; na total transfere responsabilidade e autoridade à equipe</div>
+        <div class="opt" onclick="answer('q1',this,false,'Ambas envolvem transferência de tarefas — a diferença está no grau de autoridade transferida.')"><div class="opt-l">C</div>Não há diferença real — as duas são equivalentes</div>
+        <div class="opt" onclick="answer('q1',this,false,'A delegação total funciona para qualquer tipo de tarefa, não só as simples.')"><div class="opt-l">D</div>A delegação total é usada apenas para tarefas simples</div>
+      </div>
+      <div class="fb" id="q1-fb"></div>
+    </div>
+    <div class="quiz">
+      <div class="quiz-n">Pergunta 2 de 2</div>
+      <p class="quiz-q">Um gestor recém-promovido pensa: "Delegar é sinal de fraqueza." Essa afirmação é:</p>
+      <div class="opts" id="q2">
+        <div class="opt" onclick="answer('q2',this,false,'Delegar é justamente a habilidade que diferencia um líder estratégico de um executor operacional.')"><div class="opt-l">A</div>Verdadeira — líderes fortes fazem tudo sozinhos</div>
+        <div class="opt" onclick="answer('q2',this,false,'Isso depende muito do perfil — não é verdade de forma geral.')"><div class="opt-l">B</div>Verdadeira apenas para líderes experientes</div>
+        <div class="opt" onclick="answer('q2',this,true,'Correto! Delegar é uma das habilidades mais estratégicas de um líder. Quem não delega vira um gargalo e impede o crescimento da equipe.')"><div class="opt-l">C</div>Falsa — delegar é uma habilidade estratégica essencial de qualquer líder</div>
+        <div class="opt" onclick="answer('q2',this,false,'Não é uma questão de cultura — delegar é universalmente reconhecido como habilidade essencial de liderança.')"><div class="opt-l">D</div>Depende da cultura da empresa</div>
+      </div>
+      <div class="fb" id="q2-fb"></div>
+    </div>
+    <button class="btn-next" id="btn-m1" onclick="goTo('s-m2-a')" disabled>Avançar para o Módulo 2 →</button>
+  </div>
+</div>
+
+<!-- M2-A -->
+<div id="s-m2-a" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 2 de 3</span><div class="prog-track"><div class="prog-fill" style="width:44%"></div></div><span class="prog-pct">44%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 02</div><h2>O que e para quem delegar?</h2><p>Três frameworks práticos para decidir com inteligência o que deve sair das suas mãos.</p></div>
+  <div class="body">
+    <div class="course-img-wrap"><img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80" alt="Equipe colaborando em planejamento"><div class="img-label">Definindo o que delegar: análise estratégica das responsabilidades</div></div>
+    <h2 class="s-title">Framework 1 — Triagem das Tarefas (7 Passos)</h2>
+    <p class="s-sub">Para cada tarefa, responda essas 4 perguntas. Se alguma resposta for <strong>NÃO</strong>, você tem uma candidata à delegação:</p>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">Esta tarefa é exclusiva de um gestor?</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Se outra pessoa da equipe pode executar com o mesmo nível de qualidade — mesmo que precise de treino — a tarefa é candidata à delegação.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">Está entre as minhas prioridades estratégicas?</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Tarefas operacionais e repetitivas geralmente não deveriam estar no seu radar. Prioridades estratégicas merecem sua atenção exclusiva.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">É de extrema importância que só você a realize?</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Avalie se o impacto negativo de um eventual erro seria realmente irreversível. Na maioria dos casos, com acompanhamento certo, o risco é gerenciável.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">Não há ninguém na equipe capaz de realizá-la?</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Pense além da capacidade atual. Quem poderia desenvolvê-la com apoio? Quem demonstrou interesse? Delegar é também uma ferramenta de desenvolvimento.</div></div></div>
+    </div>
+    <h2 class="s-title" style="margin-top:2rem">Framework 2 — Matriz de Eisenhower</h2>
+    <p class="s-sub">Classifique suas tarefas por urgência e importância:</p>
+    <div class="matrix">
+      <div class="matrix-cell mc-red"><h4>DEDICAR</h4><p>Urgente + Importante<br><em>Faça agora você mesmo</em></p></div>
+      <div class="matrix-cell mc-navy"><h4>DECIDIR</h4><p>Importante + Não urgente<br><em>Agende para fazer</em></p></div>
+      <div class="matrix-cell mc-green"><h4>DELEGAR</h4><p>Urgente + Não importante<br><em>Quem pode fazer por você?</em></p></div>
+      <div class="matrix-cell mc-gray"><h4>DELETAR</h4><p>Não urgente + Não importante<br><em>Elimine da lista</em></p></div>
+    </div>
+    <h2 class="s-title" style="margin-top:2rem">Framework 3 — Keith Rabois</h2>
+    <p class="s-sub">Baseia-se em duas variáveis: <strong>consequência do erro</strong> e <strong>sua convicção na decisão certa</strong>:</p>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="openTab(this,'t1')">Consequência baixa</button>
+      <button class="tab-btn" onclick="openTab(this,'t2')">Convicção alta + erro baixo</button>
+      <button class="tab-btn" onclick="openTab(this,'t3')">Erro grave + baixa convicção</button>
+      <button class="tab-btn" onclick="openTab(this,'t4')">Erro grave + alta convicção</button>
+    </div>
+    <div class="tab-panel active" id="t1"><strong>Consequências baixas + sua convicção baixa:</strong> Delegue sem pensar. Qualquer membro da equipe pode assumir com tranquilidade.</div>
+    <div class="tab-panel" id="t2"><strong>Consequências baixas + sua convicção alta:</strong> Instrua a equipe e deixe que ela decida. Compartilhe seu raciocínio, mas dê autonomia para a decisão final.</div>
+    <div class="tab-panel" id="t3"><strong>Consequências graves + sua convicção baixa:</strong> Pense mais a respeito antes de delegar. Eleve seu grau de convicção antes de transferir a responsabilidade.</div>
+    <div class="tab-panel" id="t4"><strong>Consequências graves + sua convicção alta:</strong> Não delegue — decida você. Mas eduque sua equipe no raciocínio para que evolua.</div>
+    <button class="btn-next" onclick="goTo('s-m2-b')">Próximo →</button>
+  </div>
+</div>
+
+<!-- M2-B -->
+<div id="s-m2-b" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 2 de 3</span><div class="prog-track"><div class="prog-fill" style="width:54%"></div></div><span class="prog-pct">54%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 02</div><h2>Como delegar na prática</h2><p>5 passos essenciais para uma delegação que funciona — e não gera retrabalho.</p></div>
+  <div class="body">
+    <div class="course-img-wrap"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80" alt="Desenvolvimento de colaboradores"><div class="img-label">Desenvolvimento: investir no crescimento da equipe é parte da delegação</div></div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><h4>Escolha a pessoa certa</h4><p>Não é sempre quem tem mais capacidade — é quem precisa desenvolver essa habilidade ou quem encararia como uma recompensa.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><h4>Defina e comunique a autonomia</h4><p>Seja claro sobre o quanto a pessoa pode decidir sozinha. Autonomia sem clareza gera ansiedade; clareza sem autonomia gera dependência.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><h4>Descreva os resultados esperados em detalhes</h4><p>Explique o "o que", o "por que" e o "como será medido". Não deixe margem para interpretações.</p></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-body"><h4>Garanta os recursos necessários</h4><p>Forneça treinamento, tempo, ferramentas e acesso. Uma delegação sem recursos é uma armadilha — não uma oportunidade.</p></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-body"><h4>Estabeleça pontos de controle</h4><p>Monitore cedo. Defina checkpoints combinados. Esteja disponível para dúvidas sem fazer o trabalho pela pessoa.</p></div></div>
+    </div>
+    <div class="highlight"><p><strong>Delegar não é largar.</strong> A responsabilidade final continua sendo sua. Monitorar de forma inteligente é tão importante quanto delegar bem.</p></div>
+    <button class="btn-next" onclick="goTo('s-m2-flash')">Próximo →</button>
+  </div>
+</div>
+
+<!-- M2-FLASH -->
+<div id="s-m2-flash" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 2 de 3</span><div class="prog-track"><div class="prog-fill" style="width:63%"></div></div><span class="prog-pct">63%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 02 — Fixação</div><h2>Conceitos-chave em flashcards</h2><p>Clique em cada card para ver a definição. Teste sua memória!</p></div>
+  <div class="body">
+    <div class="flash-grid">
+      <div class="flash" onclick="this.classList.toggle('flipped')"><div class="flash-inner"><div class="flash-front"><div class="flash-tag">Conceito</div><h4>Empowerment</h4><div class="flip-hint">clique para ver</div></div><div class="flash-back"><p>Delegação da responsabilidade pelos resultados — não apenas pelas funções. Dá autonomia real e libera criatividade da equipe.</p></div></div></div>
+      <div class="flash" onclick="this.classList.toggle('flipped')"><div class="flash-inner"><div class="flash-front"><div class="flash-tag">Conceito</div><h4>Microgerenciamento</h4><div class="flip-hint">clique para ver</div></div><div class="flash-back"><p>Controle excessivo sobre cada etapa. É o oposto da delegação eficaz e destrói a motivação e autonomia da equipe.</p></div></div></div>
+      <div class="flash" onclick="this.classList.toggle('flipped')"><div class="flash-inner"><div class="flash-front"><div class="flash-tag">Conceito</div><h4>Ponto de controle</h4><div class="flip-hint">clique para ver</div></div><div class="flash-back"><p>Checkpoint combinado para acompanhar o progresso sem microgerenciar. Deve ser definido antes de iniciar.</p></div></div></div>
+      <div class="flash" onclick="this.classList.toggle('flipped')"><div class="flash-inner"><div class="flash-front"><div class="flash-tag">Conceito</div><h4>Gargalo de liderança</h4><div class="flip-hint">clique para ver</div></div><div class="flash-back"><p>Quando o gestor centraliza tanto que toda decisão depende dele. Causa lentidão e trava o crescimento da equipe.</p></div></div></div>
+    </div>
+    <div class="scenario">
+      <div class="sc-chip">CENÁRIO PRÁTICO</div>
+      <h3>Carlos tem 3 relatórios semanais na sua rotina.</h3>
+      <p>Eles consomem 4 horas do seu tempo toda semana. Ana e Pedro têm perfil analítico e estão ociosos às sextas. Carlos hesita: "E se saírem errados?"</p>
+      <div class="sc-opts" id="sc1">
+        <button class="sc-opt" onclick="scenar('sc1',this,false,'Carlos mantém o gargalo. 4 horas semanais que poderiam ser investidas em atividades estratégicas.')">Continuar fazendo os 3 relatórios sozinho</button>
+        <button class="sc-opt" onclick="scenar('sc1',this,false,'Terceirizar é desnecessário — a capacidade já existe dentro da equipe.')">Contratar um freelancer para fazer os relatórios</button>
+        <button class="sc-opt" onclick="scenar('sc1',this,true,'Perfeito! Identificou a pessoa certa, começou com menor risco e criou um checkpoint. Delegação eficaz.')">Delegar 1 relatório para Ana com checkpoint na primeira semana, e avaliar antes de expandir</button>
+        <button class="sc-opt" onclick="scenar('sc1',this,false,'Delegar tudo de uma vez, sem suporte, aumenta o risco de erro e desmotiva.')">Delegar os 3 relatórios imediatamente para economizar tempo</button>
+      </div>
+      <div class="sc-res" id="sc1-r"></div>
+    </div>
+    <button class="btn-next" onclick="goTo('s-m2-quiz')">Próximo →</button>
+  </div>
+</div>
+
+<!-- M2-QUIZ -->
+<div id="s-m2-quiz" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 2 de 3</span><div class="prog-track"><div class="prog-fill" style="width:70%"></div></div><span class="prog-pct">70%</span></div>
+  <div class="mod-header"><div class="mod-chip">Verificação — Módulo 02</div><h2>Teste seus conhecimentos</h2><p>Duas questões sobre o que você aprendeu.</p></div>
+  <div class="body">
+    <div class="quiz">
+      <div class="quiz-n">Pergunta 3 de 6</div>
+      <p class="quiz-q">Na Matriz de Eisenhower, tarefas "urgentes mas não importantes" devem ser:</p>
+      <div class="opts" id="q3">
+        <div class="opt" onclick="answer('q3',this,false,'Tarefas urgentes+importantes são as que você mesmo deve fazer agora.')"><div class="opt-l">A</div>Feitas imediatamente por você</div>
+        <div class="opt" onclick="answer('q3',this,true,'Exato! Urgente + não importante = candidato ideal à delegação.')"><div class="opt-l">B</div>Delegadas para um membro da equipe</div>
+        <div class="opt" onclick="answer('q3',this,false,'Agendar é para tarefas importantes mas não urgentes.')"><div class="opt-l">C</div>Agendadas para depois</div>
+        <div class="opt" onclick="answer('q3',this,false,'Eliminar é para tarefas que não são urgentes nem importantes.')"><div class="opt-l">D</div>Eliminadas da lista</div>
+      </div>
+      <div class="fb" id="q3-fb"></div>
+    </div>
+    <div class="quiz">
+      <div class="quiz-n">Pergunta 4 de 6</div>
+      <p class="quiz-q">Segundo Keith Rabois, quando as consequências de um erro são graves e sua convicção é alta, você deve:</p>
+      <div class="opts" id="q4">
+        <div class="opt" onclick="answer('q4',this,false,'Delegar sem pensar é para situações com consequências baixas e convicção baixa.')"><div class="opt-l">A</div>Delegar sem pensar para treinar a equipe</div>
+        <div class="opt" onclick="answer('q4',this,false,'Isso se aplica quando as consequências são baixas e sua convicção é alta.')"><div class="opt-l">B</div>Instruir a equipe e deixar que ela decida</div>
+        <div class="opt" onclick="answer('q4',this,false,'Pensar mais é para quando as consequências são graves mas sua convicção é baixa.')"><div class="opt-l">C</div>Pensar mais antes de tomar qualquer atitude</div>
+        <div class="opt" onclick="answer('q4',this,true,'Correto! Quando o risco é alto e você tem convicção, a decisão é sua — mas eduque a equipe no raciocínio.')"><div class="opt-l">D</div>Decidir você mesmo e educar a equipe no raciocínio</div>
+      </div>
+      <div class="fb" id="q4-fb"></div>
+    </div>
+    <button class="btn-next" id="btn-m2q" onclick="goTo('s-m3-a')" disabled>Avançar para o Módulo 3 →</button>
+  </div>
+</div>
+
+<!-- M3-A -->
+<div id="s-m3-a" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 3 de 3</span><div class="prog-track"><div class="prog-fill" style="width:78%"></div></div><span class="prog-pct">78%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 03</div><h2>Monitorar, dar feedback e celebrar</h2><p>Delegar não termina quando você passa a tarefa. Saiba como acompanhar sem microgerenciar.</p></div>
+  <div class="body">
+    <div class="course-img-wrap"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80" alt="Equipe celebrando resultado"><div class="img-label">Feedback e celebração: pilares de uma delegação que desenvolve</div></div>
+    <div class="quote-block"><p class="quote-text">"Automaticamente ao delegar, monitorar e dar feedback você aumenta a sinergia da equipe."</p><p class="quote-author">— Método Delegue em 7 Passos</p></div>
+    <h2 class="s-title">Como monitorar sem microgerenciar</h2>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-body"><h4>Monitore cedo — não espere a entrega final</h4><p>A primeira checagem deve acontecer logo no início. Erros detectados cedo são corrigidos com muito menos custo e frustração.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-body"><h4>Combine os checkpoints antes de começar</h4><p>Os pontos de acompanhamento devem ser acordados no momento da delegação, para que a pessoa saiba quando você vai checar.</p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-body"><h4>Esteja disponível — mas não interfira sem ser chamado</h4><p>Diga claramente: "Pode me chamar se travar." Resista ao impulso de intervir antes disso.</p></div></div>
+    </div>
+    <h2 class="s-title">Como dar feedback eficaz após a delegação</h2>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">Pergunte antes de falar</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Antes de dar seu feedback, pergunte: "Como você avalia o resultado?", "Quais foram as principais dificuldades?" Isso promove autoconsciência e torna o feedback muito mais eficaz.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">Seja honesto e específico</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Evite generalizações. Aponte comportamentos e resultados específicos: "Sua análise de dados foi excelente, mas o prazo na segunda entrega precisaria de atenção."</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">Reconheça publicamente</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Reconhecimento público é uma das ferramentas mais poderosas de motivação. Celebre as vitórias diante da equipe. Isso reforça comportamentos e fortalece a cultura de delegação.</div></div></div>
+      <div class="acc-item"><button class="acc-btn" onclick="toggleAcc(this)"><div class="acc-dot"></div><span class="acc-ttl">Eleve a autoestima e a confiança</span><span class="acc-arr">▾</span></button><div class="acc-body"><div class="acc-content">Finalize todo ciclo de feedback reforçando sua confiança na pessoa. Líderes que constroem autoestima constroem equipes mais resilientes e autônomas.</div></div></div>
+    </div>
+    <button class="btn-next" onclick="goTo('s-m3-scenario')">Próximo →</button>
+  </div>
+</div>
+
+<!-- M3-SCENARIO -->
+<div id="s-m3-scenario" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="prog-bar"><span class="prog-label">Módulo 3 de 3</span><div class="prog-track"><div class="prog-fill" style="width:86%"></div></div><span class="prog-pct">86%</span></div>
+  <div class="mod-header"><div class="mod-chip">Módulo 03 — Cenário Final</div><h2>Você no papel de líder</h2><p>Aplique tudo que aprendeu nesta situação real.</p></div>
+  <div class="body">
+    <div class="scenario">
+      <div class="sc-chip">SITUAÇÃO</div>
+      <h3>Você delegou um projeto importante para Juliana.</h3>
+      <p>Ela entregou na data certa, mas o resultado ficou abaixo do esperado em qualidade. Você percebe que não explicou claramente os critérios de sucesso no início. O que você faz?</p>
+      <div class="sc-opts" id="sc2">
+        <button class="sc-opt" onclick="scenar('sc2',this,false,'Criticar publicamente destrói a confiança e a motivação. Nunca é a abordagem certa.')">Chamar atenção de Juliana na frente da equipe pelo resultado ruim</button>
+        <button class="sc-opt" onclick="scenar('sc2',this,false,'Refazer você mesmo desperdiça o aprendizado de Juliana e reforça a centralização.')">Refazer o projeto você mesmo sem comentar com Juliana</button>
+        <button class="sc-opt" onclick="scenar('sc2',this,true,'Excelente! Assumir sua parte da responsabilidade, dar feedback específico e recalibrar expectativas é a resposta madura e eficaz de um líder.')">Conversar com Juliana, assumir que não comunicou os critérios claramente, dar feedback específico e redefinir expectativas juntos</button>
+        <button class="sc-opt" onclick="scenar('sc2',this,false,'Ignorar é uma oportunidade perdida de aprendizado para Juliana e para você como líder.')">Aprovar o resultado para não desmotivar Juliana e seguir em frente</button>
+      </div>
+      <div class="sc-res" id="sc2-r"></div>
+    </div>
+    <div class="quiz" style="margin-top:1.5rem">
+      <div class="quiz-n">Pergunta 5 de 6</div>
+      <p class="quiz-q">Por que é importante monitorar uma tarefa delegada logo no início e não apenas ao final?</p>
+      <div class="opts" id="q5">
+        <div class="opt" onclick="answer('q5',this,false,'Monitorar cedo serve para corrigir erros enquanto ainda é possível — não para aumentar controle.')"><div class="opt-l">A</div>Para mostrar à equipe que você está no controle</div>
+        <div class="opt" onclick="answer('q5',this,true,'Exato! Erros detectados no início têm custo muito menor de correção.')"><div class="opt-l">B</div>Erros detectados cedo são corrigidos com menor custo e frustração</div>
+        <div class="opt" onclick="answer('q5',this,false,'Monitorar cedo não substitui a autonomia — checkpoints combinados preservam a autonomia.')"><div class="opt-l">C</div>Para reduzir a autonomia do colaborador</div>
+        <div class="opt" onclick="answer('q5',this,false,'Monitorar é parte da delegação eficaz, não um sinal de desconfiança.')"><div class="opt-l">D</div>Não é necessário monitorar — confiar é mais importante</div>
+      </div>
+      <div class="fb" id="q5-fb"></div>
+    </div>
+    <div class="quiz">
+      <div class="quiz-n">Pergunta 6 de 6</div>
+      <p class="quiz-q">Qual dessas práticas NÃO faz parte de um feedback eficaz após uma delegação?</p>
+      <div class="opts" id="q6">
+        <div class="opt" onclick="answer('q6',this,false,'Perguntar antes de falar é fundamental — promove autoconsciência no colaborador.')"><div class="opt-l">A</div>Perguntar como a pessoa avalia o próprio resultado antes de dar o seu ponto de vista</div>
+        <div class="opt" onclick="answer('q6',this,false,'Reconhecimento público é uma das ferramentas mais poderosas de motivação.')"><div class="opt-l">B</div>Reconhecer publicamente as conquistas do colaborador</div>
+        <div class="opt" onclick="answer('q6',this,true,'Correto! Críticas devem sempre ser feitas em particular. Apontar erros publicamente destrói autoestima e confiança.')"><div class="opt-l">C</div>Apontar os erros do colaborador na frente da equipe para que todos aprendam</div>
+        <div class="opt" onclick="answer('q6',this,false,'Elevar a autoestima faz parte de fechar o ciclo da delegação com qualidade.')"><div class="opt-l">D</div>Reforçar sua confiança na capacidade da pessoa</div>
+      </div>
+      <div class="fb" id="q6-fb"></div>
+    </div>
+    <div class="meter-wrap" id="score-meter" style="display:none">
+      <div class="meter-top"><span>Desempenho geral</span><span id="score-pct-lbl">0%</span></div>
+      <div class="meter-track"><div class="meter-bar" id="score-bar" style="width:0%"></div></div>
+      <p class="meter-msg" id="score-msg"></p>
+    </div>
+    <button class="btn-next" id="btn-final" onclick="goTo('s-final')" disabled>Ver resultado final →</button>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div id="s-final" class="screen">
+  <div class="logo-bar"><span class="logo-text">Zona Sul</span><span class="logo-heart">♥</span><span class="logo-sub">Universidade Corporativa</span></div>
+  <div class="final">
+    <span class="trophy">🏆</span>
+    <h2>Parabéns, líder!</h2>
+    <p>Você concluiu o curso <strong>Delegar é Preciso</strong> e está pronto para transformar sua forma de liderar.</p>
+    <div class="score-badge">
+      <div class="score-big" id="final-score">—</div>
+      <div class="score-lbl">de aproveitamento</div>
+    </div>
+    <p style="font-size:.83rem;color:rgba(255,255,255,.4);margin-bottom:2rem;max-width:400px">"Delegar é uma habilidade que se desenvolve com a prática. Não espere a hora certa. Simplesmente comece."</p>
+    <button class="btn-restart" onclick="restart()">↺ Refazer o curso</button>
+  </div>
+</div>
+
+<script>
+let correct=0,total=6,answered=new Set();
+function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const t=document.getElementById(id);if(t){t.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}}
+function toggleAcc(btn){const body=btn.nextElementSibling;const open=body.classList.contains('open');document.querySelectorAll('.acc-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.acc-btn').forEach(b=>b.classList.remove('open'));if(!open){body.classList.add('open');btn.classList.add('open')}}
+function openTab(btn,id){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById(id).classList.add('active')}
+function answer(qid,el,ok,fb){const cont=document.getElementById(qid);if(cont.querySelector('.ok,.nok'))return;cont.querySelectorAll('.opt').forEach(o=>{o.style.pointerEvents='none';if(o===el)o.classList.add(ok?'ok':'nok');else if(!ok&&o.getAttribute('onclick').includes(',true,'))o.classList.add('ok');});const f=document.getElementById(qid+'-fb');f.textContent=(ok?'✅ ':'❌ ')+fb;f.className='fb show '+(ok?'ok':'nok');if(!answered.has(qid)){answered.add(qid);if(ok)correct++}checkBtns();}
+function checkBtns(){if(answered.has('q1')&&answered.has('q2')){const b=document.getElementById('btn-m1');if(b)b.disabled=false;}if(answered.has('q3')&&answered.has('q4')){const b=document.getElementById('btn-m2q');if(b)b.disabled=false;}if(answered.has('q5')&&answered.has('q6')){const b=document.getElementById('btn-final');if(b)b.disabled=false;const pct=Math.round((correct/total)*100);const m=document.getElementById('score-meter');if(m){m.style.display='block';setTimeout(()=>{document.getElementById('score-bar').style.width=pct+'%';document.getElementById('score-pct-lbl').textContent=pct+'%';document.getElementById('score-msg').textContent=pct>=80?'Excelente! Você dominou os conceitos de delegação eficaz.':pct>=60?'Bom desempenho! Revise os pontos marcados em vermelho para fixar melhor.':'Recomendamos rever o conteúdo antes de aplicar.';},100)}document.getElementById('final-score').textContent=pct+'%';SCORM.set('cmi.core.score.raw',Math.round(pct).toString());SCORM.set('cmi.core.lesson_status',pct>=80?'passed':'failed');SCORM.finish();}}
+function scenar(sid,el,ok,fb){const cont=document.getElementById(sid);if(cont.querySelector('.good,.bad'))return;cont.querySelectorAll('.sc-opt').forEach(b=>{b.style.pointerEvents='none';if(b===el)b.classList.add(ok?'good':'bad');else if(!ok&&b.getAttribute('onclick').includes(',true,'))b.classList.add('good');});const r=document.getElementById(sid+'-r');r.textContent=(ok?'✅ ':'❌ ')+fb;r.className='sc-res show '+(ok?'good':'bad');}
+function restart(){correct=0;answered.clear();document.querySelectorAll('.opt').forEach(o=>{o.className='opt';o.style.pointerEvents=''});document.querySelectorAll('.fb').forEach(f=>{f.className='fb';f.textContent=''});document.querySelectorAll('.sc-opt').forEach(b=>{b.className='sc-opt';b.style.pointerEvents=''});document.querySelectorAll('.sc-res').forEach(r=>{r.className='sc-res';r.textContent=''});document.querySelectorAll('.flash').forEach(f=>f.classList.remove('flipped'));['btn-m1','btn-m2q','btn-final'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true});const m=document.getElementById('score-meter');if(m)m.style.display='none';document.getElementById('final-score').textContent='—';goTo('s-hero');}
+</script>
+</body>
+</html>
